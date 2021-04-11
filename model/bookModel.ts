@@ -18,4 +18,6 @@ function findBook(id:number){
         });
     })
 }
+
+console.log("hello");
 export { findAllBooks , findBook }
