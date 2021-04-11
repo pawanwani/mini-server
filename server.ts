@@ -1,5 +1,5 @@
 import * as http from "http";
-import {getAllBooks , getSpecificBook} from './controllers/controllers';
+import {getAllBooks , getSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange} from './controllers/controllers';
 
 
 let server = http.createServer((req, res) => {
@@ -15,11 +15,20 @@ let server = http.createServer((req, res) => {
       getSpecificBook(req,res,parseInt(id));
       //res.end(`get book by id=${id}`);
     } else if (myParams.has('q') && req.method === "GET") {
-      res.end(`simple text=${myParams.get("q")}`);
+      let searchText=myParams.get("q")
+      if(searchText)
+      getBooksBySimpleSearch(req,res,searchText)
+      //res.end(`simple text=${myParams.get("q")}`);
     } else if (myParams.has("author") && req.method === "GET") {
-      res.end(`simple text=${myParams.get("author")}`);
+      let author=myParams.get("author")
+      if(author)
+      getBooksByAuthorName(req,res,author)
+      //res.end(`simple text=${myParams.get("author")}`);
     } else if (myParams.has("price") && req.method === "GET") {
-      res.end(`simple text=${myParams.getAll("price")}`);
+      let priceAry=myParams.getAll("price")
+      if(priceAry)
+      getBooksInPriceRange(req,res,priceAry)
+      //res.end(`simple text=${myParams.getAll("price")}`);
     } else if (req.url?.match(/\/books\/[0-9]+/) && req.method === "PUT") {
       let id = req.url?.split("/")[2];
       res.end(`get book by id=${id}`);
