@@ -12,11 +12,12 @@ function findAllBooks() {
 exports.findAllBooks = findAllBooks;
 function findBook(id) {
     return new Promise(function (resolve, reject) {
-        books.forEach(function (element) {
-            if (element.id == id) {
-                resolve(element);
+        for (var _i = 0, _a = books.books; _i < _a.length; _i++) {
+            var ele = _a[_i];
+            if (ele.id == id) {
+                resolve(ele);
             }
-        });
+        }
     });
 }
 exports.findBook = findBook;

@@ -10,12 +10,11 @@ function findAllBooks(){
 
 function findBook(id:number){
     return new Promise ((resolve,reject)=>{
-        
-        books.forEach(element => {
-            if(element.id == id){
-                resolve(element);
+        for( let ele of books.books){
+            if(ele.id == id){
+                resolve(ele);
             }
-        });
+        }
     })
 }
 export { findAllBooks , findBook }
