@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBooksInPriceRange = exports.getBooksByAuthorName = exports.getBooksBySimpleSearch = exports.getSpecificBook = exports.getAllBooks = void 0;
+exports.addBookToJsonFile = exports.getBooksInPriceRange = exports.getBooksByAuthorName = exports.getBooksBySimpleSearch = exports.getSpecificBook = exports.getAllBooks = exports.updateBookById = void 0;
 var bookModel_1 = require("../model/bookModel");
 function getAllBooks(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -153,3 +153,83 @@ function getBooksInPriceRange(req, res, priceArray) {
     });
 }
 exports.getBooksInPriceRange = getBooksInPriceRange;
+function addBookToJsonFile(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var bookData, _a, title, author, rating, price, pages, description, votes, newBook, addedBook, error_6;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, bookModel_1.getDataFromBody(req)];
+                case 1:
+                    bookData = _b.sent();
+                    _a = JSON.parse(bookData), title = _a.title, author = _a.author, rating = _a.rating, price = _a.price, pages = _a.pages, description = _a.description, votes = _a.votes;
+                    newBook = {
+                        title: title, author: author, rating: rating, price: price, pages: pages, description: description, votes: votes
+                    };
+                    return [4 /*yield*/, bookModel_1.addBookToDB(newBook)];
+                case 2:
+                    addedBook = _b.sent();
+                    res.writeHead(201, { 'content-type': 'application/json' });
+                    res.end(JSON.stringify(addedBook));
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_6 = _b.sent();
+                    console.log(error_6);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.addBookToJsonFile = addBookToJsonFile;
+function updateBookById(req, res, id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var book, bookData, _a, title, author, rating, price, pages, description, votes, modifiedBook, addedBook, error_7, error_8;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    _b.trys.push([0, 7, , 8]);
+                    return [4 /*yield*/, bookModel_1.findBook(Number(id))];
+                case 1:
+                    book = _b.sent();
+                    if (!!book) return [3 /*break*/, 2];
+                    res.writeHead(404, { 'Content-Type': 'application/json' });
+                    res.end(JSON.stringify('Book Not Found'));
+                    return [3 /*break*/, 6];
+                case 2:
+                    _b.trys.push([2, 5, , 6]);
+                    return [4 /*yield*/, bookModel_1.getDataFromBody(req)];
+                case 3:
+                    bookData = _b.sent();
+                    _a = JSON.parse(bookData), title = _a.title, author = _a.author, rating = _a.rating, price = _a.price, pages = _a.pages, description = _a.description, votes = _a.votes;
+                    modifiedBook = {
+                        title: title || book.title,
+                        author: author || book.author,
+                        rating: rating || book.rating,
+                        price: price || book.price,
+                        pages: pages || book.pages,
+                        description: description || book.description,
+                        votes: votes || book.votes
+                    };
+                    return [4 /*yield*/, bookModel_1.updateBookToDB(modifiedBook, id)];
+                case 4:
+                    addedBook = _b.sent();
+                    res.writeHead(200, { 'content-type': 'application/json' });
+                    res.end(JSON.stringify(addedBook));
+                    return [3 /*break*/, 6];
+                case 5:
+                    error_7 = _b.sent();
+                    console.log(error_7);
+                    return [3 /*break*/, 6];
+                case 6: return [3 /*break*/, 8];
+                case 7:
+                    error_8 = _b.sent();
+                    console.log(error_8.message);
+                    return [3 /*break*/, 8];
+                case 8: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.updateBookById = updateBookById;

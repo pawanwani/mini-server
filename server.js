@@ -30,7 +30,8 @@ var server = http.createServer(function (req, res) {
             // res.end("get request");
         }
         else if (req.url === "/books" && req.method === "POST") {
-            res.end("post request");
+            controllers_1.addBookToJsonFile(req, res);
+            //res.end("post request");
         }
         else if (((_a = req.url) === null || _a === void 0 ? void 0 : _a.match(/\/books\/[0-9]+/)) && req.method === "GET") {
             var id = (_b = req.url) === null || _b === void 0 ? void 0 : _b.split("/")[2];
@@ -57,7 +58,8 @@ var server = http.createServer(function (req, res) {
         }
         else if (((_c = req.url) === null || _c === void 0 ? void 0 : _c.match(/\/books\/[0-9]+/)) && req.method === "PUT") {
             var id = (_d = req.url) === null || _d === void 0 ? void 0 : _d.split("/")[2];
-            res.end("get book by id=" + id);
+            controllers_1.updateBookById(req, res, id);
+            //res.end(`get book by id=${id}`);
         }
         else if (((_e = req.url) === null || _e === void 0 ? void 0 : _e.match(/\/books\/[0-9]+/)) && req.method === "DELETE") {
             var id = (_f = req.url) === null || _f === void 0 ? void 0 : _f.split("/")[2];

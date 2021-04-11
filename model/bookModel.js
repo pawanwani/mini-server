@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
@@ -19,7 +30,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findBookByPriceRange = exports.findBookByAuthorName = exports.findBookBySimpleText = exports.findBook = exports.findAllBooks = void 0;
+exports.getDataFromBody = exports.findBookByPriceRange = exports.findBookByAuthorName = exports.findBookBySimpleText = exports.findBook = exports.findAllBooks = exports.addBookToDB = exports.updateBookToDB = void 0;
 var fs = __importStar(require("fs"));
 var data = fs.readFileSync("./data/db.json");
 var books = JSON.parse(data);
@@ -30,14 +41,14 @@ function findAllBooks() {
 }
 exports.findAllBooks = findAllBooks;
 function findBook(id) {
-    /*  return new Promise ((resolve,reject)=>{
-          
-          books.forEach((element:any) => {
-              if(element.id == id){
-                  resolve(element);
-              }
-          });
-      })  */
+    return new Promise(function (resolve, reject) {
+        for (var _i = 0, _a = books.books; _i < _a.length; _i++) {
+            var ele = _a[_i];
+            if (ele.id == id) {
+                resolve(ele);
+            }
+        }
+    });
 }
 exports.findBook = findBook;
 function findBookBySimpleText(searchText) {
@@ -82,3 +93,42 @@ function findBookByPriceRange(priceArray) {
     });
 }
 exports.findBookByPriceRange = findBookByPriceRange;
+function getDataFromBody(req) {
+    return new Promise(function (resolve, reject) {
+        try {
+            var data_1 = "";
+            req.on("data", function (chunck) {
+                data_1 += chunck.toString();
+            });
+            req.on("end", function () { return resolve(data_1); });
+        }
+        catch (err) {
+            reject(err);
+        }
+    });
+}
+exports.getDataFromBody = getDataFromBody;
+function writeToFile(books) {
+    fs.writeFileSync("./data/db.json", JSON.stringify(books), "utf8");
+}
+function addBookToDB(Book) {
+    return new Promise(function (resolve, reject) {
+        var length = books.books.length;
+        var lastObject = books.books[length - 1];
+        var id = lastObject.id;
+        var book = __assign({ id: id + 1 }, Book);
+        books.books.push(book);
+        writeToFile(books);
+        resolve(book);
+    });
+}
+exports.addBookToDB = addBookToDB;
+function updateBookToDB(modifiedBook, id) {
+    return new Promise(function (resolve, reject) {
+        var index = books.books.findIndex(function (b) { return b.id === Number(id); });
+        books.books[index] = __assign({ "id": Number(id) }, modifiedBook);
+        writeToFile(books);
+        resolve(modifiedBook);
+    });
+}
+exports.updateBookToDB = updateBookToDB;

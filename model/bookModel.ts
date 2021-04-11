@@ -9,14 +9,13 @@ function findAllBooks() {
 }
 
 function findBook(id: number) {
-  /*  return new Promise ((resolve,reject)=>{
-        
-        books.forEach((element:any) => {
-            if(element.id == id){
-                resolve(element);
-            }
-        });
-    })  */
+  return new Promise((resolve, reject) => {
+    for (let ele of books.books) {
+      if (ele.id == id) {
+        resolve(ele);
+      }
+    }
+  });
 }
 
 function findBookBySimpleText(searchText: string) {
@@ -48,16 +47,63 @@ function findBookByAuthorName(authorName: string) {
 }
 
 function findBookByPriceRange(priceArray: string[]) {
-    return new Promise((resolve, reject) => {
-      let shortListedBooks: any[] = [];
-      let low:string=priceArray[0]
-      let high:string=priceArray[1]
-      for (let b of books.books) {
-        if (b.price<=high && b.price>=low)
-          shortListedBooks.push(b);
-      }
-      resolve(shortListedBooks);
-    });
-  }
+  return new Promise((resolve, reject) => {
+    let shortListedBooks: any[] = [];
+    let low: string = priceArray[0];
+    let high: string = priceArray[1];
+    for (let b of books.books) {
+      if (b.price <= high && b.price >= low) shortListedBooks.push(b);
+    }
+    resolve(shortListedBooks);
+  });
+}
 
-export { findAllBooks, findBook, findBookBySimpleText, findBookByAuthorName,findBookByPriceRange };
+function getDataFromBody(req: any) {
+  return new Promise((resolve, reject) => {
+    try {
+      let data: string = "";
+      req.on("data", (chunck: any) => {
+        data += chunck.toString();
+      });
+      req.on("end", () => resolve(data));
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
+function writeToFile(books: any) {
+  fs.writeFileSync("./data/db.json", JSON.stringify(books), "utf8");
+}
+
+function addBookToDB(Book: {}) {
+  return new Promise((resolve, reject) => {
+    let length: number = books.books.length;
+    let lastObject = books.books[length - 1];
+    let id: number = lastObject.id;
+    let book = { id: id + 1, ...Book };
+    books.books.push(book);
+    writeToFile(books);
+    resolve(book);
+  });
+}
+
+function updateBookToDB(modifiedBook: any, id: string) {
+  return new Promise((resolve, reject) => {
+    let index = books.books.findIndex((b: any) => b.id === Number(id));
+    books.books[index] = { "id": Number(id), ...modifiedBook };
+    writeToFile(books);
+    resolve(modifiedBook);
+  });
+}
+
+export {
+  updateBookToDB,
+  addBookToDB,
+  findAllBooks,
+  findBook,
+  findBookBySimpleText,
+  findBookByAuthorName,
+  findBookByPriceRange,
+  getDataFromBody,
+};
