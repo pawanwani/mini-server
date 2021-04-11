@@ -1,4 +1,4 @@
-import { findAllBooks , findBook } from "../model/bookModel";
+import { findAllBooks , findBook, deleteBook } from "../model/bookModel";
 
 async function getAllBooks(req:any,res:any){
     try{
@@ -18,6 +18,19 @@ async function getSpecificBook(req:any,res:any,id:number){
     }catch(error){
         console.log(error);
     }
+} 
+
+//description: Delete Product
+
+async function deleteSpecificBook(req:any, res:any, id:number){
+    try{
+        const book = await deleteBook(id);
+       // await book.remove(id)
+        res.writeHead(200,{'content-type':'text/plain'})
+        res.end("removed");
+    }catch(error){
+        console.log(error);
+    }
 }   
 
-export { getAllBooks , getSpecificBook}
+export { getAllBooks , getSpecificBook, deleteSpecificBook}

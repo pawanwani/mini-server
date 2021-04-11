@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getSpecificBook = exports.getAllBooks = void 0;
+exports.deleteSpecificBook = exports.getSpecificBook = exports.getAllBooks = void 0;
 var bookModel_1 = require("../model/bookModel");
 function getAllBooks(req, res) {
     return __awaiter(this, void 0, void 0, function () {
@@ -84,3 +84,28 @@ function getSpecificBook(req, res, id) {
     });
 }
 exports.getSpecificBook = getSpecificBook;
+//description: Delete Product
+function deleteSpecificBook(req, res, id) {
+    return __awaiter(this, void 0, void 0, function () {
+        var book, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    return [4 /*yield*/, bookModel_1.deleteBook(id)];
+                case 1:
+                    book = _a.sent();
+                    // await book.remove(id)
+                    res.writeHead(200, { 'content-type': 'text/plain' });
+                    res.end("removed");
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_3 = _a.sent();
+                    console.log(error_3);
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteSpecificBook = deleteSpecificBook;
