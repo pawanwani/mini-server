@@ -1,5 +1,5 @@
 import * as http from "http";
-import {getAllBooks , getSpecificBook} from './controllers/controllers';
+import {updateBookById,getAllBooks , getSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange,addBookToJsonFile} from './controllers/controllers';
 
 
 let server = http.createServer((req, res) => {
@@ -9,20 +9,31 @@ let server = http.createServer((req, res) => {
       getAllBooks(req,res);
       // res.end("get request");
     } else if (req.url === "/books" && req.method === "POST") {
-      res.end("post request");
+      addBookToJsonFile(req,res)
+      //res.end("post request");
     } else if (req.url?.match(/\/books\/[0-9]+/) && req.method === "GET") {
       let id = req.url?.split("/")[2];
       getSpecificBook(req,res,parseInt(id));
      // res.end(`get book by id=${id}`);
     } else if (myParams.has('q') && req.method === "GET") {
-      res.end(`simple text=${myParams.get("q")}`);
+      let searchText=myParams.get("q")
+      if(searchText)
+      getBooksBySimpleSearch(req,res,searchText)
+      //res.end(`simple text=${myParams.get("q")}`);
     } else if (myParams.has("author") && req.method === "GET") {
-      res.end(`simple text=${myParams.get("author")}`);
+      let author=myParams.get("author")
+      if(author)
+      getBooksByAuthorName(req,res,author)
+      //res.end(`simple text=${myParams.get("author")}`);
     } else if (myParams.has("price") && req.method === "GET") {
-      res.end(`simple text=${myParams.getAll("price")}`);
+      let priceAry=myParams.getAll("price")
+      if(priceAry)
+      getBooksInPriceRange(req,res,priceAry)
+      //res.end(`simple text=${myParams.getAll("price")}`);
     } else if (req.url?.match(/\/books\/[0-9]+/) && req.method === "PUT") {
       let id = req.url?.split("/")[2];
-      res.end(`get book by id=${id}`);
+      updateBookById(req,res,id)
+      //res.end(`get book by id=${id}`);
     } else if (req.url?.match(/\/books\/[0-9]+/) && req.method === "DELETE") {
       let id = req.url?.split("/")[2];
       res.end(`get book by id=${id}`);
