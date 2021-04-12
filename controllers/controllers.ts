@@ -19,7 +19,6 @@ async function getSpecificBook(req:any,res:any,id:number){
         console.log(error);
     }
 }   
-
 async function getBooksBySimpleSearch(req:any, res:any, searchText:string){
     try{
         const book = await findBookBySimpleText(searchText);
@@ -108,3 +107,4 @@ async function updateBookById(req:any,res:any,id:string){
 
 
 export { updateBookById,getAllBooks , getSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange,addBookToJsonFile}
+
