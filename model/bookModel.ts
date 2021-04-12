@@ -2,6 +2,26 @@ import * as fs from "fs";
 const data: any = fs.readFileSync("./data/db.json");
 let books = JSON.parse(data);
 
+
+function deleteBook(id:number){
+    return new Promise ((resolve,reject)=>{
+        let array : any [] =[];
+        for(let element of books.books) {
+
+
+            if(element.id !== id){
+
+                array.push(element);
+        
+            }
+        }
+
+        let newBooks={"books":array}
+        fs.writeFileSync('./data/db.json' ,JSON.stringify(newBooks));
+        resolve("deleted");
+    })
+}
+
 function findAllBooks() {
   return new Promise((resolve, reject) => {
     resolve(books);
@@ -98,6 +118,7 @@ function updateBookToDB(modifiedBook: any, id: string) {
 }
 
 export {
+  deleteBook,
   updateBookToDB,
   addBookToDB,
   findAllBooks,
@@ -107,4 +128,5 @@ export {
   findBookByPriceRange,
   getDataFromBody,
 };
+
 

@@ -1,4 +1,5 @@
-import { updateBookToDB,findAllBooks , findBook,findBookBySimpleText,findBookByAuthorName,findBookByPriceRange,getDataFromBody,addBookToDB} from "../model/bookModel";
+import { updateBookToDB,findAllBooks ,deleteBook, findBook,findBookBySimpleText,findBookByAuthorName,findBookByPriceRange,getDataFromBody,addBookToDB} from "../model/bookModel";
+
 
 async function getAllBooks(req:any,res:any){
     try{
@@ -15,6 +16,19 @@ async function getSpecificBook(req:any,res:any,id:number){
         const book = await findBook(id);
         res.writeHead(200,{'content-type':'application/json'})
         res.end(JSON.stringify(book))
+    }catch(error){
+        console.log(error);
+    }
+} 
+
+//description: Delete Product
+
+async function deleteSpecificBook(req:any, res:any, id:number){
+    try{
+        const book = await deleteBook(id);
+       // await book.remove(id)
+        res.writeHead(200,{'content-type':'text/plain'})
+        res.end("removed");
     }catch(error){
         console.log(error);
     }
@@ -106,5 +120,5 @@ async function updateBookById(req:any,res:any,id:string){
 
 
 
-export { updateBookById,getAllBooks , getSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange,addBookToJsonFile}
+export { updateBookById,getAllBooks ,deleteSpecificBook ,etSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange,addBookToJsonFile}
 

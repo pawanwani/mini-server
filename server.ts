@@ -1,20 +1,19 @@
 import * as http from "http";
-import {updateBookById,getAllBooks , getSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange,addBookToJsonFile} from './controllers/controllers';
+import {updateBookById,getAllBooks,deleteSpecificBook, getSpecificBook, getBooksBySimpleSearch,getBooksByAuthorName,getBooksInPriceRange,addBookToJsonFile} from './controllers/controllers';
 
 
 let server = http.createServer((req, res) => {
   if (req.url) {
     const myParams = new URLSearchParams(req.url.split('?')[1]);
+    
     if (req.url === "/books" && req.method === "GET") {
       getAllBooks(req,res);
-      // res.end("get request");
-    } else if (req.url === "/books" && req.method === "POST") {
+    }else if (req.url === "/books" && req.method === "POST") {
       addBookToJsonFile(req,res)
-      //res.end("post request");
     } else if (req.url?.match(/\/books\/[0-9]+/) && req.method === "GET") {
       let id = req.url?.split("/")[2];
       getSpecificBook(req,res,parseInt(id));
-     // res.end(`get book by id=${id}`);
+     
     } else if (myParams.has('q') && req.method === "GET") {
       let searchText=myParams.get("q")
       if(searchText)
@@ -36,7 +35,8 @@ let server = http.createServer((req, res) => {
       //res.end(`get book by id=${id}`);
     } else if (req.url?.match(/\/books\/[0-9]+/) && req.method === "DELETE") {
       let id = req.url?.split("/")[2];
-      res.end(`get book by id=${id}`);
+      deleteSpecificBook(req,res,parseInt(id));
+     // res.end(`get book by id=${id}`);
     } else res.end("URL not found");
   }
 });

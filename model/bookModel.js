@@ -1,4 +1,4 @@
-"use strict";
+exports.deleteBook = void 0;
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -42,15 +42,36 @@ function findAllBooks() {
 exports.findAllBooks = findAllBooks;
 function findBook(id) {
     return new Promise(function (resolve, reject) {
+        var isIdPresent = false;
         for (var _i = 0, _a = books.books; _i < _a.length; _i++) {
             var ele = _a[_i];
             if (ele.id == id) {
                 resolve(ele);
+                isIdPresent = true;
             }
+        }
+        if (isIdPresent == false) {
+            reject("ID Not Found");
         }
     });
 }
 exports.findBook = findBook;
+function deleteBook(id) {
+    return new Promise(function (resolve, reject) {
+
+        var array = [];
+        for (var _i = 0, _a = books.books; _i < _a.length; _i++) {
+            var element = _a[_i];
+            if (element.id !== id) {
+                array.push(element);
+            }
+        }
+        var newBooks = { "books": array };
+        fs.writeFileSync('./data/db.json', JSON.stringify(newBooks));
+        resolve("deleted");
+    });
+}
+exports.deleteBook = deleteBook;
 function findBookBySimpleText(searchText) {
     return new Promise(function (resolve, reject) {
         var shortListedBooks = [];
@@ -132,3 +153,4 @@ function updateBookToDB(modifiedBook, id) {
     });
 }
 exports.updateBookToDB = updateBookToDB;
+
